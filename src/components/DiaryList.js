@@ -1,7 +1,52 @@
+import { useState } from 'react';
+
+const sortOptionList = [
+  { value: 'lastest', name: '최신 순' },
+  { value: 'oldest', name: '오래된 순' },
+];
+
+const ControlMenu = ({ value, onChange, optionList }) => {
+  // value : select 가 어떤 것을 선택하는지 역할
+  // onChange : select 가 선택하는게 변화했을 때 바꿀 기능을 하는 함수
+  // optionList : select 태그 안에 들어갈 option
+
+  return (
+    <select value={value} onChange={(e) => onChange(e.target.value)}>
+      {optionList.map((it, idx) => (
+        <option key={idx} value={it.value}>
+          {it.name}
+        </option>
+      ))}
+    </select>
+  );
+};
+
 const DiaryList = ({ diaryList }) => {
+  // 정렬 기능
+  const [sortType, setSortType] = useState('lastest');
+
+  const getProcessedDiaryList = () => {
+    const compare = (a, b) => {
+      if (sortType === 'lastest') {
+        return parseInt(b.date) - parseInt(a.date);
+      } else {
+        return parseInt(a.date) - parseInt(b.date);
+      }
+    };
+    // 1. 배열을 JSON 화 시켜서 문자열로 바꿉니다.
+    // 2. 문자열을 parse -> 다시 배열로 바뀐다.
+    const copyList = JSON.parse(JSON.stringify(diaryList));
+    const sortedList = copyList.sort(compare);
+    return sortedList;
+  };
   return (
     <div>
-      {diaryList.map((it) => (
+      <ControlMenu
+        value={sortType}
+        onChange={setSortType}
+        optionList={sortOptionList}
+      />
+      {getProcessedDiaryList().map((it) => (
         <div key={it.id}>{it.content}</div>
       ))}
     </div>
