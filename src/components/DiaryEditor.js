@@ -15,7 +15,7 @@ const DiaryEditor = () => {
   const [date, setDate] = useState(getStringDate(new Date()));
 
   return (
-    <div>
+    <div className="DiaryEditor">
       <MyHeader
         headText={'새 일기쓰기'}
         leftChild={
