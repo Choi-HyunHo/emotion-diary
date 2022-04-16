@@ -6,6 +6,11 @@ import DiaryList from '../components/DiaryList';
 import { DiaryStateContext } from '../App';
 
 const Home = () => {
+  useEffect(() => {
+    const titleElement = document.querySelector('title');
+    titleElement.innerHTML = `감정 일기장`;
+  }, []);
+
   const diaryList = useContext(DiaryStateContext);
 
   // 날짜를 저장하는 state

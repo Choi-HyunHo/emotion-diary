@@ -15,6 +15,12 @@ const Diary = () => {
   // 상세 페이지에 보여질 데이터
   const [data, setData] = useState();
 
+  // 타이틀 변경
+  useEffect(() => {
+    const titleElement = document.querySelector('title');
+    titleElement.innerHTML = `감정 일기장 - ${id}번 일기`;
+  }, []);
+
   useEffect(() => {
     if (diaryList.length >= 1) {
       const targetDiary = diaryList.find(
