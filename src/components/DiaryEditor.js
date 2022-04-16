@@ -26,7 +26,7 @@ const DiaryEditor = ({ isEdit, originData }) => {
   const [date, setDate] = useState(getStringDate(new Date()));
 
   // 작성완료
-  const { onCreate, onEdit } = useContext(DiaryDispatchContext);
+  const { onCreate, onEdit, onRemove } = useContext(DiaryDispatchContext);
   const handleSubmit = () => {
     if (content.length < 1) {
       contentRef.current.focus();
@@ -47,6 +47,11 @@ const DiaryEditor = ({ isEdit, originData }) => {
     navigate('/', { replace: true });
   };
 
+  const handleRemove = () => {
+    if (window.confirm('정말 삭제 하시겠습니까?')) onRemove(originData.id);
+    navigate('/', { replace: true });
+  };
+
   // useEffect를 사용하여 isEdit와 originData가 변경될 때 isEdit가 true면 date값과 감정, 내용 상태를 각각 바꾸어 준다
   useEffect(() => {
     if (isEdit) {
@@ -62,6 +67,15 @@ const DiaryEditor = ({ isEdit, originData }) => {
         headText={isEdit ? '일기 수정하기' : '새 일기쓰기'}
         leftChild={
           <Mybutton text={'< 뒤로가기'} onClick={() => navigate(-1)} />
+        }
+        rightChild={
+          isEdit && (
+            <Mybutton
+              text={'삭제하기'}
+              type={'negative'}
+              onClick={handleRemove}
+            />
+          )
         }
       />
       <div>
