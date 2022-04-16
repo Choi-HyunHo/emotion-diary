@@ -1,4 +1,4 @@
-import { useRef, useState, useContext } from 'react';
+import { useRef, useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DiaryDispatchContext } from '../App';
 
@@ -38,7 +38,7 @@ const getStringDate = (date) => {
   return date.toISOString().slice(0, 10);
 };
 
-const DiaryEditor = () => {
+const DiaryEditor = ({ isEdit, originData }) => {
   const navigate = useNavigate();
 
   // 어떤 감정을 선택 했는지
@@ -55,21 +55,40 @@ const DiaryEditor = () => {
   const [date, setDate] = useState(getStringDate(new Date()));
 
   // 작성완료
-  const { onCreate } = useContext(DiaryDispatchContext);
+  const { onCreate, onEdit } = useContext(DiaryDispatchContext);
   const handleSubmit = () => {
     if (content.length < 1) {
       contentRef.current.focus();
       return;
     }
 
-    onCreate(date, content, emotion);
+    if (
+      window.confirm(
+        isEdit ? '일기를 수정 하시겠습니까?' : '일기를 작성 하시겠습니까?'
+      )
+    ) {
+      if (isEdit) {
+        onEdit(originData.id, date, content, emotion);
+      } else {
+        onCreate(date, content, emotion);
+      }
+    }
     navigate('/', { replace: true });
   };
+
+  // useEffect를 사용하여 isEdit와 originData가 변경될 때 isEdit가 true면 date값과 감정, 내용 상태를 각각 바꾸어 준다
+  useEffect(() => {
+    if (isEdit) {
+      setDate(getStringDate(new Date(parseInt(originData.date))));
+      setEmotion(originData.emotion);
+      setContent(originData.content);
+    }
+  }, [isEdit, originData]);
 
   return (
     <div className="DiaryEditor">
       <MyHeader
-        headText={'새 일기쓰기'}
+        headText={isEdit ? '일기 수정하기' : '새 일기쓰기'}
         leftChild={
           <Mybutton text={'< 뒤로가기'} onClick={() => navigate(-1)} />
         }
