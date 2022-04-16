@@ -67,6 +67,12 @@ const Diary = () => {
               <div className="emotion_desc">{curEmotionData.emotion_desc}</div>
             </div>
           </section>
+          <section>
+            <h4>오늘의 일기</h4>
+            <div className="diary_content_wrapper">
+              <p>{data.content}</p>
+            </div>
+          </section>
         </article>
       </div>
     );
